@@ -1,4 +1,4 @@
-# advent_of_code_2022
+# advent_of_code_2023
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [lassebe][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
