@@ -2,82 +2,55 @@ import java.lang.Integer.max
 
 fun main() {
 
-    fun part1(input: List<String>): Int {
-        var sum = 0
-        for (line in input) {
-            var maxRed = 0
-            var maxGreen = 0
-            var maxBlue = 0
-            val l = line.split(": ")
-            val gameId = Integer.parseInt(l[0].substring(5))
+    data class Game(val gameId: Int, val maxRed: Int, val maxGreen: Int, val maxBlue: Int)
 
-            val rounds = l[1].split(";")
-            for (round in rounds) {
-                val pulls = round.split(",")
-                for (pull in pulls) {
-                    val x = pull.trim().split(" ")
-                    val count = Integer.parseInt(x[0])
-                    when (x[1]) {
-                        "blue" -> {
-                            maxBlue = max(maxBlue, count)
-                        }
+    fun gameResult(line: String): Game {
+        var maxRed = 0
+        var maxGreen = 0
+        var maxBlue = 0
+        val l = line.split(": ")
+        val gameId = Integer.parseInt(l[0].substring(5))
 
-                        "green" -> {
-                            maxGreen = max(maxGreen, count)
-                        }
-
-                        "red" -> {
-                            maxRed = max(maxRed, count)
-                        }
-
-                        else -> throw Error("invalid colour")
+        val rounds = l[1].split(";")
+        for (round in rounds) {
+            val pulls = round.split(",")
+            for (pull in pulls) {
+                val x = pull.trim().split(" ")
+                val count = Integer.parseInt(x[0])
+                when (x[1]) {
+                    "blue" -> {
+                        maxBlue = max(maxBlue, count)
                     }
+
+                    "green" -> {
+                        maxGreen = max(maxGreen, count)
+                    }
+
+                    "red" -> {
+                        maxRed = max(maxRed, count)
+                    }
+
+                    else -> throw Error("invalid colour")
                 }
             }
-            if (maxRed <= 12 && maxGreen <= 13 && maxBlue <= 14) {
-                sum += gameId
-            }
         }
-        return sum
+        return Game(gameId, maxRed, maxGreen, maxBlue)
     }
 
-
-
-    fun part2(input: List<String>): Int {
-        var sum = 0
-        for (line in input) {
-            var maxRed = 0
-            var maxGreen = 0
-            var maxBlue = 0
-            val l = line.split(": ")
-
-            val rounds = l[1].split(";")
-            for (round in rounds){
-                val pulls = round.split(",")
-                for (pull in pulls) {
-                    val x = pull.trim().split(" ")
-                    val count = Integer.parseInt(x[0])
-                    when (x[1]){
-                        "blue" -> {
-                            maxBlue = max(maxBlue, count)
-                        }
-                        "green" -> {
-                            maxGreen = max(maxGreen, count)
-                        }
-                        "red" -> {
-                            maxRed = max(maxRed, count)
-                        }
-                        else -> throw Error("invalid colour")
-                    }
-                }
-            }
-            val power = maxRed * maxBlue * maxGreen
-            sum += power
+    fun part1(input: List<String>): Int = input.sumOf { line ->
+        val g = gameResult(line)
+        if (g.maxRed <= 12 && g.maxGreen <= 13 && g.maxBlue <= 14) {
+           g.gameId
+        } else {
+            0
         }
-
-
-        return sum
     }
+
+    fun part2(input: List<String>): Int = input.sumOf { line ->
+        val g = gameResult(line)
+        g.maxRed * g.maxBlue * g.maxGreen
+    }
+
 
     val testInput = readInput("02_test")
     println(part1(testInput))
